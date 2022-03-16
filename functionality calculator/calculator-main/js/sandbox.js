@@ -14,6 +14,7 @@ let firstVal = "";
 let secondVal = "";
 let showOperation = "";
 let result = null;
+let operandForEqual = "";
 let shoHistoryResult = "";
 let clickButton;
 let deleteLastNumberShow = null;
@@ -38,7 +39,6 @@ parentElementNumber.addEventListener("click", (event) => {
   switch (classlist) {
     case "color-secondary first-row-btn5":
       clickButton = "&divide;";
-
       operation(clickButton);
       break;
     case "color-secondary second-row-btn5":
@@ -253,87 +253,82 @@ const operation = (clickButton) => {
 
   dataBaseOutPut = [];
 };
+operandForEqual = operand;
 
 const equalOperation = () => {
   outPutData.innerHTML = "";
+
   switch (operand) {
     case "&divide;":
-      // if (secondVal === "") {
-      //   secondVal = firstVal;
-      // } else {
-      for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
-        secondVal = dataBaseOutPut[i] + secondVal;
+      secondVal = "";
+      if (dataBaseOutPut.length === 0 && result === null) {
+        secondVal = firstVal;
+      } else {
+        for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
+          secondVal = dataBaseOutPut[i] + secondVal;
+        }
       }
-      // }
       result = parseFloat(firstVal) / parseFloat(secondVal);
       operationData.textContent = String(result);
       break;
     case "&times;":
-      // if (secondVal === "") {
-      //   secondVal = firstVal;
-      // } else {
-      for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
-        secondVal = dataBaseOutPut[i] + secondVal;
+      secondVal = "";
+      if (dataBaseOutPut.length === 0 && result === null) {
+        secondVal = firstVal;
+      } else {
+        for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
+          secondVal = dataBaseOutPut[i] + secondVal;
+        }
       }
-      // }
       result = parseFloat(firstVal) * parseFloat(secondVal);
       operationData.textContent = String(result);
+      console.log(dataBaseOutPut);
       break;
     case "&minus;":
-      // if (secondVal === "") {
-      //   secondVal = firstVal;
-      // } else {
-      for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
-        secondVal = dataBaseOutPut[i] + secondVal;
+      secondVal = "";
+      if (dataBaseOutPut.length === 0 && result === null) {
+        secondVal = firstVal;
+      } else {
+        for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
+          secondVal = dataBaseOutPut[i] + secondVal;
+        }
       }
-      // }
       result = parseFloat(firstVal) - parseFloat(secondVal);
       operationData.textContent = String(result);
       break;
     case "&plus;":
-      // if (secondVal === "") {
-      //   secondVal = firstVal;
-      // } else {
-      for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
-        secondVal = dataBaseOutPut[i] + secondVal;
-      }
-      // }
-      result = parseFloat(firstVal) + parseFloat(secondVal);
-      operationData.textContent = String(result);
-      break;
-    default:
-      if (result !== null && secondVal !== "") {
-        firstVal = String(result);
-        switch (operand) {
-          case "&divide;":
-            result = parseFloat(firstVal) / parseFloat(secondVal);
-            operationData.textContent = String(result);
-            break;
-          case "&times;":
-            result = parseFloat(firstVal) * parseFloat(secondVal);
-            operationData.textContent = String(result);
-            break;
-          case "&minus;":
-            result = parseFloat(firstVal) - parseFloat(secondVal);
-            operationData.textContent = String(result);
-            break;
-          case "&plus;":
-            result = parseFloat(firstVal) + parseFloat(secondVal);
-            operationData.textContent = String(result);
-            break;
-          default:
-            break;
+      secondVal = "";
+      if (dataBaseOutPut.length === 0 && result === null) {
+        secondVal = firstVal;
+      } else {
+        for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
+          secondVal = dataBaseOutPut[i] + secondVal;
         }
       }
+      result = parseFloat(firstVal) + parseFloat(secondVal);
+      operationData.textContent = String(result);
+      console.log(dataBaseOutPut);
+      operandForEqual = "";
+      break;
   }
-
-  outPutData.innerHTML = `${firstVal} ${operand} ${secondVal} = `;
-  showOpHistory = `${firstVal} ${operand} ${secondVal} = `;
-  resultString = String(result);
-  historyAddItem(showOpHistory, resultString);
-  firstVal = `${result}`;
-  dataBaseOutPut = [];
-  deleteLastNumberShow = result;
+  if (operand === "") {
+    debugger;
+    // for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
+    //   firstVal = dataBaseOutPut[i] + firstVal;
+    // }
+    firstVal = "00";
+    outPutData.innerHTML = `${firstVal} =`;
+    showOpHistory = `${firstVal} =`;
+    resultString = `${firstVal} `;
+  } else {
+    outPutData.innerHTML = `${firstVal} ${operand} ${secondVal} = `;
+    showOpHistory = `${firstVal} ${operand} ${secondVal} = `;
+    resultString = String(result);
+    historyAddItem(showOpHistory, resultString);
+    firstVal = `${result}`;
+    dataBaseOutPut = [];
+    deleteLastNumberShow = result;
+  }
 };
 
 const showNumber = () => {
