@@ -1,13 +1,19 @@
 const dataNumber = document.querySelectorAll(".color-btn");
+const MemoryBtn = document.querySelector(".memory-btn");
 const outPutData = document.querySelector(".output");
 const operationData = document.querySelector(".show-zero");
 const parentElementNumber = document.querySelector(".btn-area");
 const history = document.querySelector(".history-text");
-const historyItem = document.querySelector(".history-show-item");
+const historyListItems = document.querySelector(".history-show-item");
+const memoryListItems = document.querySelector(".memory-list-items");
+// memoryListItems.display = "none";
 const memoryList = document.querySelector(".memory-text");
 const dot = document.querySelector(".dot");
 const deleteBtn = document.querySelector(".delete-btn");
 let calculationHistory = [];
+let calculationMemory = [];
+let percentResult = null;
+let operandForPercent = "";
 let operand = "";
 let dataBaseOutPut = [];
 let firstVal = "";
@@ -19,8 +25,9 @@ let shoHistoryResult = "";
 let clickButton;
 let deleteLastNumberShow = null;
 let countId = 0;
+let countMemoryId = 0;
 let showOpHistory = "";
-historyItem.textContent = "There's no history yet";
+historyListItems.textContent = "There's no history yet";
 let resultString = "";
 
 historyAddItem = (ope, res) => {
@@ -33,32 +40,44 @@ historyAddItem = (ope, res) => {
   countId++;
   showHistory();
 };
-
+memoryAddItem = () => {
+  calculationMemory.push({
+    memoryItem: operationData.textContent,
+    id: countMemoryId,
+  });
+  countMemoryId++;
+  showMemory();
+};
 parentElementNumber.addEventListener("click", (event) => {
   let classlist = event.target.classList.value;
   switch (classlist) {
     case "color-secondary first-row-btn5":
       clickButton = "&divide;";
+      operandForPercent = "&divide;";
       operation(clickButton);
       break;
     case "color-secondary second-row-btn5":
       clickButton = "&times;";
+      operandForPercent = "&times;";
       operation(clickButton);
       break;
     case "color-secondary third-row-btn5":
       clickButton = "&minus;";
+      operandForPercent = "&minus;";
       operation(clickButton);
       break;
     case "color-secondary fourth-row-btn5":
       clickButton = "&plus;";
+      operandForPercent = "&plus;";
       operation(clickButton);
       break;
     case "color-secondary fifth-row-btn5":
       equalOperation();
       break;
     case "color-secondary first-row-btn1":
+      debugger;
       clickButton = "&percnt;";
-      operation(clickButton);
+      percentNumber();
       break;
     case "color-secondary second-row-btn1":
       clickButton = "&radic;";
@@ -95,6 +114,25 @@ parentElementNumber.addEventListener("click", (event) => {
       break;
   }
 });
+MemoryBtn.addEventListener("click", (e) => {
+  memoryBtnClick = e.target.classList.value;
+  switch (memoryBtnClick) {
+    case "memory-btn-style memory-btn1":
+
+    case "memory-btn-style memory-btn2":
+    case "memory-btn-style memory-btn3":
+      memoryAddItem();
+      break;
+    case "memory-btn-style memory-btn4":
+      memoryAddItem();
+      break;
+    case "memory-btn-style memory-btn5":
+      memoryAddItem();
+      break;
+    case "memory-btn-style memory-btn6":
+  }
+});
+
 // done deleteAllData function
 deleteAllData = () => {
   outPutData.textContent = "";
@@ -105,6 +143,8 @@ deleteAllData = () => {
   showOperation = "";
   result = null;
   deleteLastNumberShow = null;
+  percentResult = null;
+  operandForPercent = "";
 };
 // done deleteLastNumber function
 deleteLastNumber = () => {
@@ -164,15 +204,6 @@ const operation = (clickButton) => {
       operand = clickButton;
       showOperation = `${firstVal} ${operand} `;
       operationData.textContent = firstVal;
-    }
-  } else if (clickButton === "&percnt;") {
-    if (dataBaseOutPut.length > 0 || firstVal !== "") {
-      if (firstVal === "") {
-        for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
-          firstVal = dataBaseOutPut[i] + firstVal;
-        }
-      }
-      operand = clickButton;
     }
   } else if (clickButton === "&radic;") {
     if (dataBaseOutPut.length > 0 || firstVal !== "") {
@@ -285,6 +316,7 @@ const equalOperation = () => {
       console.log(dataBaseOutPut);
       break;
     case "&minus;":
+      console.log(secondVal);
       secondVal = "";
       if (dataBaseOutPut.length === 0 && result === null) {
         secondVal = firstVal;
@@ -339,7 +371,7 @@ const showNumber = () => {
 };
 
 const showHistory = () => {
-  historyItem.innerHTML = "";
+  historyListItems.innerHTML = "";
   deleteBtn.style.display = "block";
 
   for (item of calculationHistory) {
@@ -348,15 +380,53 @@ const showHistory = () => {
     listHistoryTwo.id = id;
     listHistoryTwo.classList.add("r-text-two");
     listHistoryTwo.innerHTML = `${operationShow} <br> ${resultShow}`;
-    historyItem.style.display = "flex";
-    historyItem.style.justifyContent = "flex-end";
-    historyItem.prepend(listHistoryTwo);
+    historyListItems.style.display = "flex";
+    historyListItems.style.justifyContent = "flex-end";
+    historyListItems.prepend(listHistoryTwo);
+  }
+};
+const showMemory = () => {
+  memoryItems.innerHTML = "";
+  for (memoryItems of calculationMemory) {
+    const { memoryItem, id } = memoryItems;
+    const listMemory = document.createElement("li");
+    listMemory.id = id;
+    listMemory.classList.add("r-text-two");
+    listMemory.innerHTML = `${memoryItem}`;
+    memoryListItems.style.display = "flex";
+    memoryListItems.style.justifyContent = "flex-end";
+    memoryListItems.prepend(listMemory);
   }
 };
 
 deleteBtn.addEventListener("click", () => {
   calculationHistory = [];
-  historyItem.innerHTML = " there is no history";
-  historyItem.style.display = "block";
+  historyListItems.innerHTML = " There's no history yet";
+  historyListItems.style.display = "block";
   deleteBtn.style.display = "none";
 });
+
+function percentNumber() {
+  if (dataBaseOutPut.length > 0 || firstVal !== "") {
+    if (firstVal === "") {
+      for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
+        firstVal = dataBaseOutPut[i] + firstVal;
+      }
+    }
+    if (percentResult !== null) {
+      firstVal = String(percentResult);
+    }
+    if (secondVal === "") {
+      for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
+        secondVal = dataBaseOutPut[i] + secondVal;
+      }
+    } else {
+      secondVal = firstVal;
+    }
+    percentResult = (parseFloat(firstVal) * parseFloat(secondVal)) / 100;
+    outPutData.innerHTML = `${firstVal} ${operandForPercent} ${secondVal}`;
+    secondVal = String(percentResult);
+    dataBaseOutPut = secondVal;
+    operationData.textContent = percentResult;
+  }
+}
