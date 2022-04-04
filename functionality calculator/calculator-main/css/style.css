@@ -128,10 +128,13 @@ img {
   flex-flow: row nowrap;
   padding: 2px 5px 2px 0px;
   margin-right: 5px;
-  border-bottom: rgb(37, 133, 243) 3px solid;
   direction: ltr;
   font-size: 15px;
   left: 0;
+  cursor: default;
+}
+.selected-list-item {
+  border-bottom: rgb(37, 133, 243) 3px solid;
 }
 .memory-text {
   padding: 3px 5px 2px 5px;
@@ -140,6 +143,10 @@ img {
   direction: ltr;
   display: flex;
   flex-flow: row nowrap;
+  cursor: default;
+}
+.memory-show-item {
+  display: none;
 }
 
 .right-side-text {
@@ -262,6 +269,11 @@ img {
   font-size: 13px;
   font-weight: 700;
 }
+.memory-btn3,
+.memory-btn4,
+.memory-btn5 {
+  cursor: default;
+}
 
 .memory-btn3:hover {
   background-color: var(--color-hover);
@@ -272,8 +284,9 @@ img {
 .memory-btn5:hover {
   background-color: var(--color-hover);
 }
-.memory-btn1,
-.memory-btn2,
+.memory-disabled {
+  color: #818181;
+}
 .memory-btn6 {
   color: #818181;
 }

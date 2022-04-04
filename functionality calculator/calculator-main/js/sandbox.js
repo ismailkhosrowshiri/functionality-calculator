@@ -5,11 +5,12 @@ const operationData = document.querySelector(".show-zero");
 const parentElementNumber = document.querySelector(".btn-area");
 const history = document.querySelector(".history-text");
 const historyListItems = document.querySelector(".history-show-item");
-const memoryListItems = document.querySelector(".memory-list-items");
-// memoryListItems.display = "none";
-const memoryList = document.querySelector(".memory-text");
+const memoryListItems = document.querySelector(".memory-show-item");
+const memory = document.querySelector(".memory-text");
 const dot = document.querySelector(".dot");
 const deleteBtn = document.querySelector(".delete-btn");
+const clearMemoryBtn = document.querySelector(".memory-btn1");
+const restoreMemoryBtn = document.querySelector(".memory-btn2");
 let calculationHistory = [];
 let calculationMemory = [];
 let percentResult = null;
@@ -20,25 +21,24 @@ let firstVal = "";
 let secondVal = "";
 let showOperation = "";
 let result = null;
-let operandForEqual = "";
 let shoHistoryResult = "";
 let clickButton;
 let deleteLastNumberShow = null;
 let countId = 0;
 let countMemoryId = 0;
 let showOpHistory = "";
-historyListItems.textContent = "There's no history yet";
 let resultString = "";
 
 historyAddItem = (ope, res) => {
-  debugger;
   calculationHistory.push({
     operationShow: ope,
     resultShow: res,
     id: countId,
   });
   countId++;
-  showHistory();
+  if (historyListItems.style.display === "block" || historyListItems.style.display === "flex") {
+    showHistory();
+  }
 };
 memoryAddItem = () => {
   calculationMemory.push({
@@ -46,7 +46,25 @@ memoryAddItem = () => {
     id: countMemoryId,
   });
   countMemoryId++;
-  showMemory();
+  if (memoryListItems.style.display === "block" || memoryListItems.style.display === "flex") {
+    showMemory();
+  }
+  restoreMemoryBtn.classList.remove("memory-disabled");
+  restoreMemoryBtn.style.cursor = "default";
+  restoreMemoryBtn.addEventListener("mouseover", () => {
+    restoreMemoryBtn.style.backgroundColor = "#d1d1d1";
+  });
+  restoreMemoryBtn.addEventListener("mouseout", () => {
+    restoreMemoryBtn.style.backgroundColor = "#e6e6e6";
+  });
+  clearMemoryBtn.classList.remove("memory-disabled");
+  clearMemoryBtn.style.cursor = "default";
+  clearMemoryBtn.addEventListener("mouseover", () => {
+    clearMemoryBtn.style.backgroundColor = "#d1d1d1";
+  });
+  clearMemoryBtn.addEventListener("mouseout", () => {
+    clearMemoryBtn.style.backgroundColor = "#e6e6e6";
+  });
 };
 parentElementNumber.addEventListener("click", (event) => {
   let classlist = event.target.classList.value;
@@ -75,7 +93,6 @@ parentElementNumber.addEventListener("click", (event) => {
       equalOperation();
       break;
     case "color-secondary first-row-btn1":
-      debugger;
       clickButton = "&percnt;";
       percentNumber();
       break;
@@ -118,21 +135,88 @@ MemoryBtn.addEventListener("click", (e) => {
   memoryBtnClick = e.target.classList.value;
   switch (memoryBtnClick) {
     case "memory-btn-style memory-btn1":
-
+      memoryClear();
+      break;
     case "memory-btn-style memory-btn2":
+      memoryRestore();
+      break;
     case "memory-btn-style memory-btn3":
-      memoryAddItem();
+      if (calculationMemory.length === 0) {
+        memoryAddItem();
+      } else {
+        memoryPlus();
+      }
       break;
     case "memory-btn-style memory-btn4":
-      memoryAddItem();
+      if (calculationMemory.length === 0) {
+        memoryAddItem();
+      } else {
+        memoryMenus();
+      }
       break;
     case "memory-btn-style memory-btn5":
       memoryAddItem();
       break;
     case "memory-btn-style memory-btn6":
+      break;
   }
 });
+memoryPlus = () => {
+  let memoryPlusValue = calculationMemory[calculationMemory.length - 1].memoryItem;
+  memoryPlusValue = parseFloat(memoryPlusValue) + parseFloat(operationData.textContent);
+  calculationMemory[calculationMemory.length - 1].memoryItem = memoryPlusValue;
+  callShowMemory();
+};
 
+memoryMenus = () => {
+  let memoryMenusValue = calculationMemory[calculationMemory.length - 1].memoryItem;
+  memoryMenusValue = parseFloat(memoryMenusValue) - parseFloat(operationData.textContent);
+  calculationMemory[calculationMemory.length - 1].memoryItem = memoryMenusValue;
+  callShowMemory();
+};
+memoryClear = () => {
+  calculationMemory = [];
+  clearMemoryBtn.classList.add("memory-disabled");
+  restoreMemoryBtn.classList.add("memory-disabled");
+  deleteBtn.style.display = "none";
+  callShowMemory();
+};
+memoryRestore = () => {
+  let memoryRestoreValue = calculationMemory[calculationMemory.length - 1].memoryItem;
+  operationData.textContent = memoryRestoreValue;
+  callShowMemory();
+};
+
+callShowMemory = () => {
+  if (memoryListItems.style.display === "block" || memoryListItems.style.display === "flex") {
+    showMemory();
+  }
+};
+
+history.addEventListener("click", (e) => {
+  memoryListItems.style.display = "none";
+  historyListItems.style.display = "block";
+  history.classList.add("selected-list-item");
+  memory.classList.remove("selected-list-item");
+  if (calculationHistory.length > 0) {
+    deleteBtn.style.display = "block";
+  } else {
+    deleteBtn.style.display = "none";
+  }
+  showHistory();
+});
+memory.addEventListener("click", (e) => {
+  historyListItems.style.display = "none";
+  memoryListItems.style.display = "block";
+  memory.classList.add("selected-list-item");
+  history.classList.remove("selected-list-item");
+  if (calculationMemory.length > 0) {
+    deleteBtn.style.display = "block";
+  } else {
+    deleteBtn.style.display = "none";
+  }
+  showMemory();
+});
 // done deleteAllData function
 deleteAllData = () => {
   outPutData.textContent = "";
@@ -232,7 +316,6 @@ const operation = (clickButton) => {
       outPutData.innerHTML = "showOperation";
       firstVal = String(result);
     }
-    console.log(firstVal);
   } else if (clickButton === "&sup3") {
     if (dataBaseOutPut.length > 0 || firstVal !== "") {
       if (firstVal === "") {
@@ -284,7 +367,6 @@ const operation = (clickButton) => {
 
   dataBaseOutPut = [];
 };
-operandForEqual = operand;
 
 const equalOperation = () => {
   outPutData.innerHTML = "";
@@ -313,10 +395,8 @@ const equalOperation = () => {
       }
       result = parseFloat(firstVal) * parseFloat(secondVal);
       operationData.textContent = String(result);
-      console.log(dataBaseOutPut);
       break;
     case "&minus;":
-      console.log(secondVal);
       secondVal = "";
       if (dataBaseOutPut.length === 0 && result === null) {
         secondVal = firstVal;
@@ -339,16 +419,10 @@ const equalOperation = () => {
       }
       result = parseFloat(firstVal) + parseFloat(secondVal);
       operationData.textContent = String(result);
-      console.log(dataBaseOutPut);
-      operandForEqual = "";
       break;
   }
   if (operand === "") {
-    debugger;
-    // for (let i = dataBaseOutPut.length - 1; i >= 0; i--) {
-    //   firstVal = dataBaseOutPut[i] + firstVal;
-    // }
-    firstVal = "00";
+    firstVal = "0";
     outPutData.innerHTML = `${firstVal} =`;
     showOpHistory = `${firstVal} =`;
     resultString = `${firstVal} `;
@@ -372,38 +446,57 @@ const showNumber = () => {
 
 const showHistory = () => {
   historyListItems.innerHTML = "";
-  deleteBtn.style.display = "block";
-
-  for (item of calculationHistory) {
-    const { operationShow, resultShow, id } = item;
-    const listHistoryTwo = document.createElement("li");
-    listHistoryTwo.id = id;
-    listHistoryTwo.classList.add("r-text-two");
-    listHistoryTwo.innerHTML = `${operationShow} <br> ${resultShow}`;
-    historyListItems.style.display = "flex";
-    historyListItems.style.justifyContent = "flex-end";
-    historyListItems.prepend(listHistoryTwo);
+  if (calculationHistory.length > 0) {
+    for (item of calculationHistory) {
+      const { operationShow, resultShow, id } = item;
+      const listHistoryTwo = document.createElement("li");
+      listHistoryTwo.id = id;
+      listHistoryTwo.classList.add("r-text-two");
+      listHistoryTwo.innerHTML = `${operationShow} <br> ${resultShow}`;
+      historyListItems.style.display = "flex";
+      historyListItems.style.justifyContent = "flex-end";
+      historyListItems.prepend(listHistoryTwo);
+    }
+    if (historyListItems.style.display !== "none") {
+      deleteBtn.style.display = "block";
+    }
+  } else {
+    historyListItems.innerHTML = "there is no history yet";
+    historyListItems.style.display = "block";
   }
 };
 const showMemory = () => {
-  memoryItems.innerHTML = "";
-  for (memoryItems of calculationMemory) {
-    const { memoryItem, id } = memoryItems;
-    const listMemory = document.createElement("li");
-    listMemory.id = id;
-    listMemory.classList.add("r-text-two");
-    listMemory.innerHTML = `${memoryItem}`;
-    memoryListItems.style.display = "flex";
-    memoryListItems.style.justifyContent = "flex-end";
-    memoryListItems.prepend(listMemory);
+  memoryListItems.innerHTML = "";
+  if (calculationMemory.length > 0) {
+    for (memoryItems of calculationMemory) {
+      const { memoryItem, id } = memoryItems;
+      const listMemory = document.createElement("li");
+      listMemory.id = id;
+      listMemory.classList.add("r-text-two");
+      listMemory.innerHTML = `${memoryItem}`;
+      memoryListItems.style.display = "flex";
+      memoryListItems.style.justifyContent = "flex-end";
+      memoryListItems.style.flexDirection = "column";
+      memoryListItems.style.alignItems = "flex-end";
+      memoryListItems.prepend(listMemory);
+    }
+    if (memoryListItems.style.display !== "none") {
+      deleteBtn.style.display = "block";
+    }
+  } else {
+    memoryListItems.innerHTML = "there's nothing saved in memory";
+    memoryListItems.style.display = "block";
   }
 };
 
 deleteBtn.addEventListener("click", () => {
-  calculationHistory = [];
-  historyListItems.innerHTML = " There's no history yet";
-  historyListItems.style.display = "block";
-  deleteBtn.style.display = "none";
+  if (calculationHistory.length > 0 && historyListItems.style.display !== "none") {
+    calculationHistory = [];
+    deleteBtn.style.display = "none";
+    showHistory();
+  } else if (calculationMemory.length > 0 && memoryListItems.style.display !== "none") {
+    memoryClear();
+  }
 });
 
 function percentNumber() {
@@ -430,3 +523,10 @@ function percentNumber() {
     operationData.textContent = percentResult;
   }
 }
+(() => {
+  if (historyListItems.style.display !== "none") {
+    showHistory();
+  } else if (memoryListItems.style.display !== "none") {
+    showMemory();
+  }
+})();
