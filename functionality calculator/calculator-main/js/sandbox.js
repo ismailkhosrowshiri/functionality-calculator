@@ -1,6 +1,13 @@
-import { memoryListItems, calculationMemory, showMemory, memoryClear } from "./memory.js";
+import {
+  memoryListItems,
+  calculationMemory,
+  showMemory,
+  memoryClear,
+  callShowMemory,
+  memoryRestoreValue,
+} from "./memory.js";
 import { historyListItems, calculationHistory, historyAddItem, showHistory, historyClear } from "./history.js";
-export { operationData, deleteBtn };
+export { operationData, deleteBtn, restoreMemory };
 const dataNumber = document.querySelectorAll(".color-btn");
 const outPutData = document.querySelector(".output");
 const operationData = document.querySelector(".show-zero");
@@ -12,7 +19,7 @@ let percentResult = null;
 let operandForPercent = "";
 let operand = "";
 let dataBaseOutPut = [];
-let firstVal = "";
+export let firstVal = "";
 let secondVal = "";
 let showOperation = "";
 let result = null;
@@ -323,7 +330,11 @@ deleteBtn.addEventListener("click", () => {
     memoryClear();
   }
 });
-
+const restoreMemory = () => {
+  operationData.textContent = memoryRestoreValue;
+  firstVal = memoryRestoreValue;
+  callShowMemory();
+};
 function percentNumber() {
   if (dataBaseOutPut.length > 0 || firstVal !== "") {
     if (firstVal === "") {

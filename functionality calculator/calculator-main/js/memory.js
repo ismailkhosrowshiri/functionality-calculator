@@ -1,12 +1,14 @@
-export { memoryListItems, memory, calculationMemory, showMemory, memoryClear };
+export { memoryListItems, memory, calculationMemory, memoryRestoreValue, showMemory, memoryClear, callShowMemory };
 import { history, historyListItems } from "./history.js";
-import { operationData, deleteBtn } from "./sandbox.js";
+import { operationData, deleteBtn, restoreMemory } from "./sandbox.js";
 
 const memoryBtn = document.querySelector(".memory-btn");
 const memoryListItems = document.querySelector(".memory-show-item");
 const memory = document.querySelector(".memory-text");
 const clearMemoryBtn = document.querySelector(".memory-btn1");
 const restoreMemoryBtn = document.querySelector(".memory-btn2");
+
+let memoryRestoreValue;
 let calculationMemory = [];
 let countMemoryId = 0;
 
@@ -111,9 +113,8 @@ const memoryClear = () => {
   callShowMemory();
 };
 const memoryRestore = () => {
-  let memoryRestoreValue = calculationMemory[calculationMemory.length - 1].memoryItem;
-  operationData.textContent = memoryRestoreValue;
-  callShowMemory();
+  memoryRestoreValue = calculationMemory[calculationMemory.length - 1].memoryItem;
+  restoreMemory();
 };
 
 const callShowMemory = () => {
