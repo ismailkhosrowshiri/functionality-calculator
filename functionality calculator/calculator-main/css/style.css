@@ -165,6 +165,10 @@ img {
 }
 .r-text-two {
   display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-content: flex-end;
+  align-items: flex-end;
 }
 .delete-btn-area {
   width: 20%;
@@ -773,4 +777,11 @@ img {
   .btn-header2 {
     display: none;
   }
+}
+* > li {
+  margin-bottom: 20px;
+}
+li > span {
+  font-size: 20px;
+  font-weight: bold;
 }
