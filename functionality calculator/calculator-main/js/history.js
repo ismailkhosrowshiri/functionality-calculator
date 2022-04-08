@@ -41,7 +41,6 @@ const showHistory = () => {
       listHistoryTwo.id = id;
       listHistoryTwo.classList.add("r-text-two");
       listHistoryTwo.innerHTML = `${operationShow} <br> <span>${resultShow}</span>`;
-      historyListItems.style.display = "flex";
       historyListItems.style.justifyContent = "flex-end";
       historyListItems.prepend(listHistoryTwo);
     }

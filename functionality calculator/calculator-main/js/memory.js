@@ -21,7 +21,6 @@ const showMemory = () => {
       listMemory.id = id;
       listMemory.classList.add("r-text-two");
       listMemory.innerHTML = `${memoryItem}`;
-      memoryListItems.style.display = "flex";
       memoryListItems.style.justifyContent = "flex-end";
       memoryListItems.style.flexDirection = "column";
       memoryListItems.style.alignItems = "flex-end";
